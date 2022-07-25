@@ -1,21 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/22 21:37:46 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/24 13:25:23 by asoler           ###   ########.fr       */
+/*   Created: 2022/04/11 15:26:52 by asoler            #+#    #+#             */
+/*   Updated: 2022/07/25 17:00:05 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# include "includes/libft.h"
-# include <sys/types.h>
-# include <unistd.h>
-# include <sys/wait.h>
-# include <fcntl.h>
-# define PIPEX_H
+#include "../includes/libft.h"
 
-#endif
+char	*ft_strjoin(char *s1, char const *s2)
+{
+	char			*result;
+	unsigned int	i;
+	unsigned int	size;
+
+	size = ft_strlen(s1) + ft_strlen(s2);
+	result = malloc((size + 1) * sizeof(char));
+	if (!result)
+		return (0);
+	i = 0;
+	while (s1[i])
+	{
+		result[i] = s1[i];
+		i++;
+	}
+	while (*s2)
+	{
+		result[i] = *s2;
+		s2++;
+		i++;
+	}
+	result[i] = *s2;
+	free(s1);
+	return (result);
+}

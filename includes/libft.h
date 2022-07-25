@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:01:26 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/22 22:44:25 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/24 16:33:14 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ char	*ft_strdup(const char *s);
 
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char const *s2);
 
 size_t	ft_strlcat(char *dest, const char *src, size_t count);
 

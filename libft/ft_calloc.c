@@ -1,21 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/22 21:37:46 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/24 13:25:23 by asoler           ###   ########.fr       */
+/*   Created: 2022/04/11 01:50:46 by asoler            #+#    #+#             */
+/*   Updated: 2022/05/24 14:25:59 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# include "includes/libft.h"
-# include <sys/types.h>
-# include <unistd.h>
-# include <sys/wait.h>
-# include <fcntl.h>
-# define PIPEX_H
+#include "../includes/libft.h"
 
-#endif
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*x;
+
+	if (nmemb > __SIZE_MAX__ / size)
+		return (NULL);
+	x = malloc(size * nmemb);
+	if (!x)
+		return (NULL);
+	ft_bzero(x, (size * nmemb));
+	return (x);
+}
