@@ -25,6 +25,7 @@ re: fclean all
 
 fclean: clean
 	rm -rf $(NAME)
+	make fclean -C libft
 
 clean:
 	rm -rf *.o

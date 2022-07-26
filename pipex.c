@@ -6,36 +6,23 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/25 22:43:35 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/26 14:04:34 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	*ft_strjoin_org(char *s1, char const *s2)
+void	free_array(char **array)
 {
-	char			*result;
-	unsigned int	i;
-	unsigned int	size;
+	int	i;
 
-	size = ft_strlen(s1) + ft_strlen(s2);
-	result = malloc((size + 1) * sizeof(char));
-	if (!result)
-		return (0);
 	i = 0;
-	while (s1[i])
+	while(array[i])
 	{
-		result[i] = s1[i];
+		free(array[i]);
 		i++;
 	}
-	while (*s2)
-	{
-		result[i] = *s2;
-		s2++;
-		i++;
-	}
-	result[i] = *s2;
-	return (result);
+	free(array);
 }
 
 int	main(int argc, char *argv[])
@@ -46,7 +33,7 @@ int	main(int argc, char *argv[])
 	int		pipe_fd1[2];
 	// int		pipe_fd2[2];
 	split_args = ft_split(argv[2], ' ');
-	split_args[0] = ft_strjoin_org("/usr/bin/", split_args[0]);
+	split_args[0] = ft_strjoin("/usr/bin/", split_args[0]);
 
 	file_fd = open(argv[1], O_RDONLY); //input
 	if (pipe(pipe_fd1) == -1)
@@ -74,6 +61,7 @@ int	main(int argc, char *argv[])
 		// close(pipe_fd2[1]);
 		dup2(pipe_fd1[1], 1);
 		wait(NULL);
+		free_array(split_args);
 		// close(pipe_fd1[1]);
 		exit (0);
 	}
