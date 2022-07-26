@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/26 18:19:01 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/26 21:50:50 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,10 @@ int	main(int argc, char *argv[])
 		close(pipe_fd1[1]);
 		wait(NULL);
 		free_array(split_args);
+		file_fd = open(argv[4], O_RDWR | O_CREAT | O_TRUNC);
 		dup2(pipe_fd1[0], 0);
 		close(pipe_fd1[0]);
+		dup2(file_fd, 1);
 		if (execve(split_args2[0], split_args2, NULL) == -1)
 			return (-1);
 	}
