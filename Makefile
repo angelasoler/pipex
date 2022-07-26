@@ -25,9 +25,11 @@ re: fclean all
 
 fclean: clean
 	rm -rf $(NAME)
-	make fclean -C libft
 
 clean:
 	rm -rf *.o
+
+fclean_libft: fclean
+	make fclean -C libft
 
 .PONHY: re fclean clean all
