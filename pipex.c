@@ -6,79 +6,67 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/27 14:50:29 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/27 20:53:26 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	initialize_cmds_args(t_data *data)
+int	fork_cmd1(t_data *data)
 {
-	data->cmd1 = ft_split(data->argv[2], ' ');
-	data->cmd2 = ft_split(data->argv[3], ' ');
-	data->cmd1[0] = ft_strjoin("/usr/bin/", data->cmd1[0]);
-	data->cmd2[0] = ft_strjoin("/usr/bin/", data->cmd2[0]);
-}
-
-int	initialize_pipe_and_process(t_data *data)
-{
-	data->file_fd = open(data->argv[1], O_RDONLY);
 	if (pipe(data->pipe_fd) < 0)
 		return (0);
-	data->pid = fork();
-	if (data->pid < 0)
+	data->pid_in = fork();
+	if (data->pid_in < 0)
 		return (0);
 	return (1);
 }
 
-int	cmd2_process(t_data *data)
+int	fork_cmd2(t_data *data)
 {
 	data->file_fd = open(data->argv[4], O_RDWR | O_CREAT | O_TRUNC);
-	data->pid2 = fork();
-	if (data->pid < 0)
+	data->pid_out = fork();
+	if (data->pid_out < 0)
 		return (0);
+	return (1);
+}
+
+int	exec_cmds(int output_fd, char **cmd)
+{
+	dup2(output_fd, 1);
+	close(output_fd);
+	if (execve(cmd[0], cmd, NULL) < 0)
+	{
+		ft_printf("Execve fail");
+		return (0);
+	}
 	return (1);
 }
 
 int	handle_processes(t_data *data)
 {
-	if (!initialize_pipe_and_process(data))
-	{
-		ft_printf("Pipe or fork");
-		return (0);
-	}
-	if (!data->pid)
+	if (!data->pid_in)
 	{
 		close(data->pipe_fd[0]);
 		dup2(data->file_fd, 0);
 		close(data->file_fd);
-		dup2(data->pipe_fd[1], 1);
-		close(data->pipe_fd[1]);
-		if (execve(data->cmd1[0], data->cmd1, NULL) < 0)
-		{
-			ft_printf("Execve fail");
+		if (exec_cmds(data->pipe_fd[1], data->cmd1))
 			return (0);
-		}
 	}
 	close(data->pipe_fd[1]);
-	waitpid(data->pid, 0, 0);
-	free_array(data->cmd1);
+	if (!wait_and_free(data->pid_in, data->cmd1))
+		return (0);
 	dup2(data->pipe_fd[0], 0);
 	close(data->pipe_fd[0]);
-	if (!cmd2_process(data))
+	if (!fork_cmd2(data))
 		return (0);
-	if (!data->pid2)
+	if (!data->pid_out)
 	{
-		dup2(data->file_fd, 1);
-		close(data->file_fd);
-		if (execve(data->cmd2[0], data->cmd2, NULL) < 0)
-		{
-			ft_printf("Execve2 fail");
+		if (!exec_cmds(data->file_fd, data->cmd2))
 			return (0);
-		}
 	}
-	waitpid(data->pid2, 0, 0);
-	free_array(data->cmd2);
+	if (!wait_and_free(data->pid_out, data->cmd2))
+		return (0);
 	close(data->file_fd);
 	return (1);
 }
@@ -94,7 +82,7 @@ int	main(int argc, char *argv[])
 	}
 	data.argv = argv;
 	initialize_cmds_args(&data);
-	if (!handle_processes(&data))
+	if (!fork_cmd1(&data) || !handle_processes(&data))
 	{
 		ft_printf("Something went wrong with processes");
 		return (-1);

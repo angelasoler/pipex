@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:37:46 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/27 14:50:56 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/27 20:47:40 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,14 @@ typedef struct s_data
 	char	**argv;
 	char	**cmd1;
 	char	**cmd2;
-	pid_t	pid;
-	pid_t	pid2;
+	pid_t	pid_in;
+	pid_t	pid_out;
 	int		file_fd;
 	int		pipe_fd[2];
 }	t_data;
 
 void	free_array(char **array);
+int		wait_and_free(pid_t pid, char **cmd);
+void	initialize_cmds_args(t_data *data);
 
 #endif
