@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:37:46 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/28 00:19:50 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/28 00:49:23 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,25 @@
 # include <errno.h>
 # define PIPEX_H
 
-typedef struct s_data
+typedef struct s_proc
+{
+	pid_t	pid_in;
+	pid_t	pid_out;
+	int		pipe_fd[2];
+}	t_proc;
+
+typedef struct s_args
 {
 	char	**argv;
 	char	**cmd1;
 	char	**cmd2;
-	pid_t	pid_in;
-	pid_t	pid_out;
+	char	**envp;
 	int		file_fd;
-	int		pipe_fd[2];
-}	t_data;
+	t_proc	proc;
+}	t_args;
 
 void	free_array(char **array);
 int		wait_and_free(pid_t pid, char **cmd);
-void	initialize_cmds_args(t_data *data);
+void	initialize_cmds_args(t_args *args);
 
 #endif

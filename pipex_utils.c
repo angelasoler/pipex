@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 02:21:29 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/27 20:48:44 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/28 00:43:27 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ void	free_array(char **array)
 	free(array);
 }
 
-void	initialize_cmds_args(t_data *data)
+void	initialize_cmds_args(t_args *args)
 {
-	data->cmd1 = ft_split(data->argv[2], ' ');
-	data->cmd2 = ft_split(data->argv[3], ' ');
-	data->cmd1[0] = ft_strjoin("/usr/bin/", data->cmd1[0]);
-	data->cmd2[0] = ft_strjoin("/usr/bin/", data->cmd2[0]);
-	data->file_fd = open(data->argv[1], O_RDONLY);
+	args->cmd1 = ft_split(args->argv[2], ' ');
+	args->cmd2 = ft_split(args->argv[3], ' ');
+	args->cmd1[0] = ft_strjoin("/usr/bin/", args->cmd1[0]);
+	args->cmd2[0] = ft_strjoin("/usr/bin/", args->cmd2[0]);
+	args->file_fd = open(args->argv[1], O_RDONLY);
 }
 
 int	wait_and_free(pid_t pid, char **cmd)
