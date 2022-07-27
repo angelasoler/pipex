@@ -1,34 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/22 21:37:46 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/27 02:22:02 by asoler           ###   ########.fr       */
+/*   Created: 2022/07/27 02:21:29 by asoler            #+#    #+#             */
+/*   Updated: 2022/07/27 02:23:27 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# include "includes/libft.h"
-# include <sys/types.h>
-# include <unistd.h>
-# include <sys/wait.h>
-# include <fcntl.h>
-# include <errno.h>
-# define PIPEX_H
+#include "pipex.h"
 
-typedef struct s_data
+void	free_array(char **array)
 {
-	char	**argv;
-	char	**cmd1;
-	char	**cmd2;
-	pid_t	pid;
-	int		pipe_fd[2];
-	int		file_fd;
-}	t_data;
+	int	i;
 
-void	free_array(char **array);
-
-#endif
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}

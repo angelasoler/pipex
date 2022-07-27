@@ -6,7 +6,8 @@ WFLAGS = -Wall -Werror -Wextra
 
 LIBFT = libft.a
 
-SRC = pipex.c
+SRC =	pipex.c \
+		pipex_utils.c
 
 OBJ = $(SRC:.c=.o)
 
