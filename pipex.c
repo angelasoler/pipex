@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/27 19:45:22 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/27 19:54:32 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	initialize_args(t_data *data)
 	data->cmd1[0] = ft_strjoin("/usr/bin/", data->cmd1[0]);
 	data->cmd2[0] = ft_strjoin("/usr/bin/", data->cmd2[0]);
 	data->file_fd = open(data->argv[1], O_RDONLY);
-	data->file_fd2 = open(data->argv[4], O_RDWR | O_CREAT | O_TRUNC);
 	if (pipe(data->pipe_fd) < 0)
 		return (0);
 	return (1);
@@ -50,8 +49,7 @@ int	exec_cmds(int output_fd, char **cmd)
 
 int	handle_processes(t_data *data)
 {
-	
-	if (!fork_cmd(data->pid))
+	if (!initialize_args(data) || !fork_cmd(data->pid))
 		return (0);
 
 
@@ -68,6 +66,7 @@ int	handle_processes(t_data *data)
 	
 	waitpid(data->pid, 0, 0);
 	free_array(data->cmd1);
+	data->file_fd2 = open(data->argv[4], O_RDWR | O_CREAT | O_TRUNC);
 	
 	dup2(data->pipe_fd[0], 0);
 	close(data->pipe_fd[0]);
@@ -97,7 +96,7 @@ int	main(int argc, char *argv[])
 		return (-1);
 	}
 	data.argv = argv;
-	if (!initialize_args(&data) || !handle_processes(&data))
+	if (!handle_processes(&data))
 	{
 		ft_printf("Something went wrong with processes");
 		return (-1);
