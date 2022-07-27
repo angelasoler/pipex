@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:37:46 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/27 20:47:40 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/28 00:19:50 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <unistd.h>
 # include <sys/wait.h>
 # include <fcntl.h>
+# include <stdio.h>
+# include <string.h>
 # include <errno.h>
 # define PIPEX_H
 

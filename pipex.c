@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/27 20:53:26 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/28 00:31:05 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	exec_cmds(int output_fd, char **cmd)
 	close(output_fd);
 	if (execve(cmd[0], cmd, NULL) < 0)
 	{
-		ft_printf("Execve fail");
+		perror("Execve fail");
 		return (0);
 	}
 	return (1);
@@ -77,15 +77,15 @@ int	main(int argc, char *argv[])
 
 	if (argc != 5)
 	{
-		ft_printf("Wrong arguments number");
+		ft_printf("Error: %s\n", strerror(EINVAL));
 		return (-1);
 	}
 	data.argv = argv;
 	initialize_cmds_args(&data);
 	if (!fork_cmd1(&data) || !handle_processes(&data))
 	{
-		ft_printf("Something went wrong with processes");
-		return (-1);
+		perror("Something went wrong with processes");
+		return (10);
 	}
-	return (argc);
+	return (-6);
 }
