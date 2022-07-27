@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:37:46 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/27 14:50:56 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/27 19:33:31 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_data
 	pid_t	pid;
 	pid_t	pid2;
 	int		file_fd;
+	int		file_fd2;
 	int		pipe_fd[2];
 }	t_data;
 
