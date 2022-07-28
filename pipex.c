@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/28 21:04:01 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/28 21:31:49 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 int	fork_cmd1(t_args *args)
 {
+	if (!verify_access(args->argv[1], R_OK))
+		return (0);
+	args->file_fd = open(args->argv[1], O_RDONLY);
+	args->cmd1 = ft_split(args->argv[2], ' ');
+	args->cmd1[0] = ft_strjoin("/usr/bin/", args->cmd1[0]);
 	if (pipe(args->proc.pipe_fd) < 0)
 		return (0);
 	args->proc.pid_in = fork();
@@ -25,11 +30,8 @@ int	fork_cmd1(t_args *args)
 int	fork_cmd2(t_args *args)
 {
 	args->file_fd = open(args->argv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (access(args->argv[4], W_OK) < 0)
-	{
-		ft_printf("bash: %s: %s\n", args->argv[4], strerror(errno));
-		exit (0);
-	}
+	if (!verify_access(args->argv[4], W_OK))
+		return (0);
 	args->cmd2 = ft_split(args->argv[3], ' ');
 	args->cmd2[0] = ft_strjoin("/usr/bin/", args->cmd2[0]);
 	args->proc.pid_out = fork();
@@ -83,7 +85,6 @@ int	main(int argc, char *argv[], char *envp[])
 	}
 	args.argv = argv;
 	args.envp = envp;
-	initialize_cmds_args(&args);
 	if (!fork_cmd1(&args) || !handle_processes(&args))
 		perror("Something went wrong");
 	return (0);
