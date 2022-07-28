@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/28 15:29:30 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/28 16:14:45 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ int	fork_cmd1(t_args *args)
 int	fork_cmd2(t_args *args)
 {
 	args->file_fd = open(args->argv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (access(args->argv[4], W_OK) < 0)
+	{
+		free_array(args->cmd2);
+		ft_printf("bash: %s: %s\n", args->argv[4], strerror(errno));
+		exit (0);
+	}
 	args->proc.pid_out = fork();
 	if (args->proc.pid_out < 0)
 		return (0);
