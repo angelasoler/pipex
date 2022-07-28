@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 02:21:29 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/28 16:13:31 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/28 20:54:44 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,14 @@ void	initialize_cmds_args(t_args *args)
 	}
 	args->file_fd = open(args->argv[1], O_RDONLY);
 	args->cmd1 = ft_split(args->argv[2], ' ');
-	args->cmd2 = ft_split(args->argv[3], ' ');
 	args->cmd1[0] = ft_strjoin("/usr/bin/", args->cmd1[0]);
-	args->cmd2[0] = ft_strjoin("/usr/bin/", args->cmd2[0]);
 }
 
 int	wait_and_free(pid_t pid, char **cmd)
 {
 	if (waitpid(pid, 0, 0) < 0)
 	{
-		ft_printf("Wait fail");
+		ft_printf("Wait fail %s", strerror(errno));
 		return (0);
 	}
 	free_array(cmd);

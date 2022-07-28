@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:37:46 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/28 00:49:23 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/28 20:06:50 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_proc
 	pid_t	pid_in;
 	pid_t	pid_out;
 	int		pipe_fd[2];
+	int		status;
 }	t_proc;
 
 typedef struct s_args
