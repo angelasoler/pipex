@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 02:21:29 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/28 21:32:53 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/28 21:58:13 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,4 @@ int	verify_access(char *path, int mode)
 		return (0);
 	}
 	return (1);
-}
-
-void	alloc_exec_paths(char *path, char **cmd)
-{
-	cmd = ft_split(path, ' ');
-	cmd[0] = ft_strjoin("/usr/bin/", cmd[0]);
 }

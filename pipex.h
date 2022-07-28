@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:37:46 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/28 21:27:12 by asoler           ###   ########.fr       */
+/*   Updated: 2022/07/28 21:58:38 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ typedef struct s_args
 
 void	free_array(char **array);
 int		wait_and_free(pid_t pid, char **cmd);
-void	alloc_exec_paths(char *path, char **cmd);
 int		verify_access(char *path, int mode);
 
 #endif
