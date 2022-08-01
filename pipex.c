@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/01 19:42:39 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/01 21:30:02 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	fork_cmd1(t_args *args)
 {
 	if (!verify_access(args->argv[1], R_OK))
 	{
-		args->proc.pid_in = 1;
+		args->proc.pid_in = -1;
 		return (1);
 	}
 	args->file_fd = open(args->argv[1], O_RDONLY);
@@ -33,7 +33,7 @@ int	fork_cmd2(t_args *args)
 	args->file_fd = open(args->argv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (!verify_access(args->argv[4], W_OK))
 	{
-		args->proc.pid_in = 1;
+		args->proc.pid_out = -1;
 		return (1);
 	}
 	args->cmd2 = ft_split(args->argv[3], ' ');
@@ -46,7 +46,6 @@ int	fork_cmd2(t_args *args)
 
 void	exec_cmds(int output_fd, char **cmd, char **envp)
 {
-	// ft_printf("%d", output_fd);
 	if (dup2(output_fd, 1) < 0)
 		ft_printf("bash: %s: %s\n", strerror(errno));
 	close(output_fd);
@@ -59,7 +58,7 @@ void	exec_cmds(int output_fd, char **cmd, char **envp)
 int	handle_processes(t_args *args)
 {
 	if (pipe(args->proc.pipe_fd) < 0)
-		return (1);
+		exit(EXIT_FAILURE);
 	if (!fork_cmd1(args) && !args->proc.pid_in)
 	{
 		close(args->proc.pipe_fd[0]);
@@ -68,15 +67,22 @@ int	handle_processes(t_args *args)
 		exec_cmds(args->proc.pipe_fd[1], args->cmd1, args->envp);
 	}
 	close(args->proc.pipe_fd[1]);
-	if (!wait_and_free(args->proc.pid_in, args->cmd1))
-		args->proc.ret = 1; //if i kill everything here it just does not creat newfile
-	// else
+	if (args->proc.pid_in != -1)
+	{
+		wait_and_free(args->proc.pid_in, args->cmd1, &args->proc.status);
+		WIFEXITED(args->proc.status);
+		args->proc.ret = WIFEXITED(args->proc.status);
+	}
 	dup2(args->proc.pipe_fd[0], 0);
 	close(args->proc.pipe_fd[0]);
 	if (!fork_cmd2(args) && !args->proc.pid_out)
-		exec_cmds(args->file_fd, args->cmd2, NULL); //the grep x is staying here forever
-	if (!wait_and_free(args->proc.pid_out, args->cmd2))
-		args->proc.ret = 1;
+		exec_cmds(args->file_fd, args->cmd2, args->envp);
+	if (args->proc.pid_out != -1)
+	{
+		wait_and_free(args->proc.pid_out, args->cmd2, &args->proc.status);
+		if (WIFEXITED(args->proc.status))
+			args->proc.ret = WEXITSTATUS(args->proc.status);
+	}
 	close(args->file_fd);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 02:21:29 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/01 16:12:46 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/01 20:41:27 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void	free_array(char **array)
 	free(array);
 }
 
-int	wait_and_free(pid_t pid, char **cmd)
+int	wait_and_free(pid_t pid, char **cmd, int *status)
 {
-	if (waitpid(pid, 0, 0) < 0)
+	if (waitpid(pid, status, 0) < 0)
 	{
 		ft_printf("Wait fail %s\n", strerror(errno));
 		return (0);
