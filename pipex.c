@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/01 14:47:04 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/01 15:42:52 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,17 +68,14 @@ int	handle_processes(t_args *args)
 		exec_cmds(args->proc.pipe_fd[1], args->cmd1, args->envp);
 	}
 	close(args->proc.pipe_fd[1]);
-	if (!wait_and_free(args->proc.pid_in, args->cmd1))
-		args->proc.ret = 1;
-	else
-	{
+	if (wait_and_free(args->proc.pid_in, args->cmd1, &args->proc.status))
 		dup2(args->proc.pipe_fd[0], 0);
-	}
+	args->proc.ret = args->proc.status;
 	close(args->proc.pipe_fd[0]);
 	if (!fork_cmd2(args) && !args->proc.pid_out)
 		exec_cmds(args->file_fd, args->cmd2, args->envp);
-	if (!wait_and_free(args->proc.pid_out, args->cmd2))
-		args->proc.ret = 1;
+	wait_and_free(args->proc.pid_out, args->cmd2, &args->proc.status);
+	args->proc.ret = WEXITSTATUS(args->proc.status);
 	close(args->file_fd);
 	return (0);
 }
@@ -94,7 +91,6 @@ int	main(int argc, char *argv[], char *envp[])
 	}
 	args.argv = argv;
 	args.envp = envp;
-	if (handle_processes(&args))
-		perror("Something went wrong");
+	handle_processes(&args);
 	return (args.proc.ret);
 }
