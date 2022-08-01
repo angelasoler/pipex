@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 02:21:29 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/01 14:48:28 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/01 16:12:46 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,12 @@ int	wait_and_free(pid_t pid, char **cmd)
 	return (1);
 }
 
-int	verify_access(char *path, int mode, int ret)
+int	verify_access(char *path, int mode)
 {
 	if (access(path, mode) < 0)
 	{
 		ft_printf("bash: %s: %s\n", path, strerror(errno));
-		ret = 1;
 		return (0);
 	}
-	ret = 0;
 	return (1);
 }

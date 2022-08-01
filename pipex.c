@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/01 14:47:04 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/01 16:15:38 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	fork_cmd1(t_args *args)
 {
-	if (!verify_access(args->argv[1], R_OK, args->proc.ret))
+	if (!verify_access(args->argv[1], R_OK))
 	{
 		args->proc.pid_in = 1;
 		return (1);
@@ -27,14 +27,13 @@ int	fork_cmd1(t_args *args)
 	args->proc.pid_in = fork();
 	if (args->proc.pid_in < 0)
 		return (1);
-	args->proc.ret = 0;
 	return (0);
 }
 
 int	fork_cmd2(t_args *args)
 {
 	args->file_fd = open(args->argv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (!verify_access(args->argv[4], W_OK, args->proc.ret))
+	if (!verify_access(args->argv[4], W_OK))
 	{
 		args->proc.pid_in = 1;
 		return (1);
@@ -44,13 +43,13 @@ int	fork_cmd2(t_args *args)
 	args->proc.pid_out = fork();
 	if (args->proc.pid_out < 0)
 		return (1);
-	args->proc.ret = 0;
 	return (0);
 }
 
 void	exec_cmds(int output_fd, char **cmd, char **envp)
 {
-	dup2(output_fd, 1);
+	if (dup2(output_fd, 1) < 0)
+		ft_printf("bash: %s: %s\n", strerror(errno));
 	close(output_fd);
 	execve(cmd[0], cmd, envp);
 	perror("Execve fail");
@@ -69,14 +68,12 @@ int	handle_processes(t_args *args)
 	}
 	close(args->proc.pipe_fd[1]);
 	if (!wait_and_free(args->proc.pid_in, args->cmd1))
-		args->proc.ret = 1;
+		args->proc.ret = 1; //if i kill everything here it just does not creat newfile
 	else
-	{
 		dup2(args->proc.pipe_fd[0], 0);
-	}
 	close(args->proc.pipe_fd[0]);
 	if (!fork_cmd2(args) && !args->proc.pid_out)
-		exec_cmds(args->file_fd, args->cmd2, args->envp);
+		exec_cmds(args->file_fd, args->cmd2, NULL); //the grep x is staying here forever
 	if (!wait_and_free(args->proc.pid_out, args->cmd2))
 		args->proc.ret = 1;
 	close(args->file_fd);
@@ -94,7 +91,6 @@ int	main(int argc, char *argv[], char *envp[])
 	}
 	args.argv = argv;
 	args.envp = envp;
-	if (handle_processes(&args))
-		perror("Something went wrong");
+	handle_processes(&args);
 	return (args.proc.ret);
 }
