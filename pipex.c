@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/01 16:15:38 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/01 19:42:39 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ int	fork_cmd1(t_args *args)
 	args->file_fd = open(args->argv[1], O_RDONLY);
 	args->cmd1 = ft_split(args->argv[2], ' ');
 	args->cmd1[0] = ft_strjoin("/usr/bin/", args->cmd1[0]);
-	if (pipe(args->proc.pipe_fd) < 0)
-		return (1);
 	args->proc.pid_in = fork();
 	if (args->proc.pid_in < 0)
 		return (1);
@@ -48,6 +46,7 @@ int	fork_cmd2(t_args *args)
 
 void	exec_cmds(int output_fd, char **cmd, char **envp)
 {
+	// ft_printf("%d", output_fd);
 	if (dup2(output_fd, 1) < 0)
 		ft_printf("bash: %s: %s\n", strerror(errno));
 	close(output_fd);
@@ -59,6 +58,8 @@ void	exec_cmds(int output_fd, char **cmd, char **envp)
 
 int	handle_processes(t_args *args)
 {
+	if (pipe(args->proc.pipe_fd) < 0)
+		return (1);
 	if (!fork_cmd1(args) && !args->proc.pid_in)
 	{
 		close(args->proc.pipe_fd[0]);
@@ -69,8 +70,8 @@ int	handle_processes(t_args *args)
 	close(args->proc.pipe_fd[1]);
 	if (!wait_and_free(args->proc.pid_in, args->cmd1))
 		args->proc.ret = 1; //if i kill everything here it just does not creat newfile
-	else
-		dup2(args->proc.pipe_fd[0], 0);
+	// else
+	dup2(args->proc.pipe_fd[0], 0);
 	close(args->proc.pipe_fd[0]);
 	if (!fork_cmd2(args) && !args->proc.pid_out)
 		exec_cmds(args->file_fd, args->cmd2, NULL); //the grep x is staying here forever
