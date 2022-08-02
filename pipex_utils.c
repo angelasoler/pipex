@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 02:21:29 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/02 01:05:58 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/02 15:12:09 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	free_array(char **array)
 	free(array);
 }
 
-int	wait_and_free(pid_t pid, char **cmd, int *status)
+int	wait_and_free(pid_t pid, char **cmd, int *status, int *ret)
 {
 	if (waitpid(pid, status, 0) < 0)
 	{
@@ -33,6 +33,8 @@ int	wait_and_free(pid_t pid, char **cmd, int *status)
 		return (0);
 	}
 	free_array(cmd);
+	if (WIFEXITED(*status))
+		*ret = WEXITSTATUS(*status);
 	return (1);
 }
 
@@ -46,33 +48,36 @@ int	verify_access(char *path, int mode)
 	return (1);
 }
 
-void	alloc_exec_paths(char *path, char ***cmd)
+int	alloc_exec_paths(char *path, char ***cmd)
 {
 	if (*path == 0)
 	{
 		*cmd = malloc(sizeof(char *) * 2);
-		*cmd[0] = ft_strdup("/usr/bin/dxfsdf");
+		*cmd[0] = ft_strdup("/usr/bin/ ");
 	}
 	else
 	{
 		*cmd = ft_split(path, ' ');
 		*cmd[0] = ft_strjoin("/usr/bin/", *cmd[0]);
 	}
+	return (0);
 }
 
+
+                                // -----------> empty cmd <---------------- //
 // ==2032== Memcheck, a memory error detector
 // ==2032== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
 // ==2032== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
 // ==2032== Command: ./pipex hello   newfile
 // ==2032== 
-// bash: /usr/bin/dxfsdf: No such file or directory
+// bash: /usr/bin/ : No such file or directory
 // ==2032== Conditional jump or move depends on uninitialised value(s)
 // ==2032==    at 0x401720: free_array (in /home/coder/projetos_fase1/pipex/pipex)
 // ==2032==    by 0x4012B8: fork_cmd1 (in /home/coder/projetos_fase1/pipex/pipex)
 // ==2032==    by 0x4014E8: handle_processes (in /home/coder/projetos_fase1/pipex/pipex)
 // ==2032==    by 0x4016E6: main (in /home/coder/projetos_fase1/pipex/pipex)
 // ==2032== 
-// bash: /usr/bin/dxfsdf: No such file or directory
+// bash: /usr/bin/ : No such file or directory
 // ==2032== Conditional jump or move depends on uninitialised value(s)
 // ==2032==    at 0x401720: free_array (in /home/coder/projetos_fase1/pipex/pipex)
 // ==2032==    by 0x4013CB: fork_cmd2 (in /home/coder/projetos_fase1/pipex/pipex)

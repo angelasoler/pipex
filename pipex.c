@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/02 00:48:11 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/02 15:07:57 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	fork_cmd1(t_args *args)
 	if (!verify_access(args->cmd1[0], F_OK))
 	{
 		args->proc.pid_in = -1;
+		close(args->file_fd);
 		free_array(args->cmd1);
 		args->proc.ret = 127;
 		return (127);
@@ -81,21 +82,15 @@ int	handle_processes(t_args *args)
 	}
 	close(args->proc.pipe_fd[1]);
 	if (args->proc.pid_in != -1)
-	{
-		wait_and_free(args->proc.pid_in, args->cmd1, &args->proc.status);
-		if (WIFEXITED(args->proc.status))
-			args->proc.ret = WEXITSTATUS(args->proc.status);
-	}
+		wait_and_free(args->proc.pid_in, args->cmd1, \
+		&args->proc.status, &args->proc.ret);
 	dup2(args->proc.pipe_fd[0], 0);
 	close(args->proc.pipe_fd[0]);
 	if (!fork_cmd2(args) && !args->proc.pid_out)
 		exec_cmds(args->file_fd, args->cmd2, args->envp);
 	if (args->proc.pid_out != -1)
-	{
-		wait_and_free(args->proc.pid_out, args->cmd2, &args->proc.status);
-		if (WIFEXITED(args->proc.status))
-			args->proc.ret = WEXITSTATUS(args->proc.status);
-	}
+		wait_and_free(args->proc.pid_out, args->cmd2, \
+		&args->proc.status, &args->proc.ret);
 	close(args->file_fd);
 	return (0);
 }
