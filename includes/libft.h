@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:01:26 by asoler            #+#    #+#             */
-/*   Updated: 2022/07/27 02:17:00 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/02 21:16:20 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ char	*ft_strnstr(const char *big, const char *little, size_t len);
 
 char	*ft_strrchr(const char *s, int c);
 
-char	*ft_strtrim(char const *s1, char const *set);
+char	*ft_strtrim(char *s1, char const *set);
 
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 

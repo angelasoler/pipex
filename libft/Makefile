@@ -9,7 +9,12 @@ SRC =	ft_itoa.c \
 		ft_strlen.c \
 		ft_strjoin.c \
 		ft_strdup.c \
+		ft_strchr.c \
 		ft_split.c \
+		ft_strnstr.c \
+		ft_strtrim.c \
+		ft_substr.c \
+		ft_strncmp.c \
 		ft_calloc.c \
 		ft_bzero.c \
 		get_next_line.c \

@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 02:21:29 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/02 15:12:09 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/02 21:47:36 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,21 +48,70 @@ int	verify_access(char *path, int mode)
 	return (1);
 }
 
+int	replace_space(char *space)
+{
+	int	r_letter;
+
+	r_letter = 97;
+	while (ft_strchr(space, r_letter))
+		r_letter++;
+	space[1] = r_letter;
+	return (r_letter);
+}
+
+void	trim_each(char **path, int r_letter)
+{
+	int		i;
+	char	*space;
+
+	i = 0;
+	while (path[i])
+	{
+		path[i] = ft_strtrim(path[i], "'");
+		if (r_letter)
+		{
+			space = ft_strchr(path[i], r_letter);
+			if (space)
+				space[0] = ' ';
+		}
+		i++;
+	}
+}
+
 int	alloc_exec_paths(char *path, char ***cmd)
 {
+	char	*space;
+	char	*arg;
+	char	*aux;
+	size_t	len;
+	int		r_letter;
+
+	r_letter = 0;
+	len = ft_strlen(path);
 	if (*path == 0)
 	{
 		*cmd = malloc(sizeof(char *) * 2);
-		*cmd[0] = ft_strdup("/usr/bin/ ");
+		*cmd[0] = ft_strdup(""); //problem to free this, see foot
+		return (0);
 	}
-	else
+	aux = ft_strdup(path);
+	arg = ft_strchr(path, '\'');
+	if (arg)
 	{
-		*cmd = ft_split(path, ' ');
-		*cmd[0] = ft_strjoin("/usr/bin/", *cmd[0]);
+		space = ft_strnstr(aux, "' '", len);
+		while (space)
+		{
+			r_letter = replace_space(space);
+			space = ft_strnstr((space + 3), "' '", len);
+		}
 	}
+	*cmd = ft_split(aux, ' ');
+	if (arg)
+		trim_each(*cmd, r_letter);
+	*cmd[0] = ft_strjoin("/usr/bin/", *cmd[0]);
+	free(aux);
 	return (0);
 }
-
 
                                 // -----------> empty cmd <---------------- //
 // ==2032== Memcheck, a memory error detector
