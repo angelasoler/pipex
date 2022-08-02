@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 02:21:29 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/02 21:47:36 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/02 23:54:42 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,46 +48,60 @@ int	verify_access(char *path, int mode)
 	return (1);
 }
 
-int	replace_space(char *space)
+int	replace_space(char *space, char *cmd)
 {
 	int	r_letter;
 
 	r_letter = 97;
-	while (ft_strchr(space, r_letter))
+	while (ft_strchr(cmd, r_letter))
 		r_letter++;
-	space[1] = r_letter;
+	space[0] = r_letter;
 	return (r_letter);
 }
 
 void	trim_each(char **path, int r_letter)
 {
 	int		i;
-	char	*space;
+	char	*aux;
+	// int		i2;
 
 	i = 0;
+	// i2 = 0;
 	while (path[i])
 	{
 		path[i] = ft_strtrim(path[i], "'");
-		if (r_letter)
+		aux = ft_strchr(path[i], r_letter);
+		while (aux)
 		{
-			space = ft_strchr(path[i], r_letter);
-			if (space)
-				space[0] = ' ';
+			aux[0] = ' ';
+			aux = ft_strchr(&aux[1], r_letter);
 		}
+		// if (r_letter)
+		// {
+		// 	while (*path[i])
+		// 	{
+		// 		if (*path[i] == r_letter)
+		// 		{
+		// 			*path[i] = ' ';
+		// 		}
+		// 		path[i]++;
+		// 	}
+		// }
+		// ft_printf("%s\n", path[i]);
 		i++;
 	}
 }
 
 int	alloc_exec_paths(char *path, char ***cmd)
 {
-	char	*space;
+	// char	*space;
 	char	*arg;
 	char	*aux;
-	size_t	len;
+	int		i;
 	int		r_letter;
 
 	r_letter = 0;
-	len = ft_strlen(path);
+	i = 0;
 	if (*path == 0)
 	{
 		*cmd = malloc(sizeof(char *) * 2);
@@ -95,15 +109,23 @@ int	alloc_exec_paths(char *path, char ***cmd)
 		return (0);
 	}
 	aux = ft_strdup(path);
-	arg = ft_strchr(path, '\'');
+	arg = ft_strchr(aux, '\'');
 	if (arg)
 	{
-		space = ft_strnstr(aux, "' '", len);
-		while (space)
+		i++;
+		while (arg[i] != '\'' && arg[i])
 		{
-			r_letter = replace_space(space);
-			space = ft_strnstr((space + 3), "' '", len);
+			if (arg[i] == ' ')
+				r_letter = replace_space(&arg[i], aux);
+			i++;
+			// len++;
 		}
+		// space = ft_strnstr(aux, "' '", len);
+		// while (space)
+		// {
+		// 	r_letter = replace_space(space);
+		// 	space = ft_strnstr((space + 3), "' '", len);
+		// }
 	}
 	*cmd = ft_split(aux, ' ');
 	if (arg)
