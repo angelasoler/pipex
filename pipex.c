@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/02 15:07:57 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/03 20:21:47 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,13 @@ int	fork_cmd1(t_args *args)
 	{
 		args->proc.pid_in = -1;
 		close(args->file_fd);
-		free_array(args->cmd1);
+		if (args->cmd1[0][0] != '\0')
+			free_array(args->cmd1);
+		else
+		{
+			free(args->cmd1[0]);
+			free(args->cmd1);
+		}
 		args->proc.ret = 127;
 		return (127);
 	}
@@ -48,7 +54,13 @@ int	fork_cmd2(t_args *args)
 	if (!verify_access(args->cmd2[0], F_OK))
 	{
 		args->proc.pid_out = -1;
-		free_array(args->cmd2);
+		if (args->cmd2[0][0])
+			free_array(args->cmd2);
+		else
+		{
+			free(args->cmd2[0]);
+			free(args->cmd2);
+		}
 		args->proc.ret = 127;
 		return (127);
 	}

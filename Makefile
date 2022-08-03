@@ -7,14 +7,15 @@ WFLAGS = -Wall -Werror -Wextra
 LIBFT = libft.a
 
 SRC =	pipex.c \
-		pipex_utils.c
+		pipex_utils.c \
+		pipex_parsing.c
 
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(OBJ) $(WFLAGS) -L ./ -lft -o $(NAME)
+	$(CC) $(WFLAGS) $(OBJ) -L ./ -lft -o $(NAME)
 
 %.o: %.c
 	$(CC) $(WFLAGS) -c $< -o $@
