@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 02:21:29 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/02 23:54:42 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/03 06:46:48 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,45 +63,34 @@ void	trim_each(char **path, int r_letter)
 {
 	int		i;
 	char	*aux;
-	// int		i2;
 
 	i = 0;
-	// i2 = 0;
 	while (path[i])
 	{
-		path[i] = ft_strtrim(path[i], "'");
-		aux = ft_strchr(path[i], r_letter);
-		while (aux)
+		if (ft_strlen(path[i]) > 2)
+			path[i] = ft_strtrim(path[i], "'");
+		if (r_letter)
 		{
-			aux[0] = ' ';
-			aux = ft_strchr(&aux[1], r_letter);
+			aux = ft_strchr(path[i], r_letter);
+			while (aux)
+			{
+				aux[0] = ' ';
+				aux = ft_strchr(&aux[1], r_letter);
+			}
 		}
-		// if (r_letter)
-		// {
-		// 	while (*path[i])
-		// 	{
-		// 		if (*path[i] == r_letter)
-		// 		{
-		// 			*path[i] = ' ';
-		// 		}
-		// 		path[i]++;
-		// 	}
-		// }
-		// ft_printf("%s\n", path[i]);
 		i++;
 	}
 }
 
 int	alloc_exec_paths(char *path, char ***cmd)
 {
-	// char	*space;
 	char	*arg;
 	char	*aux;
 	int		i;
 	int		r_letter;
 
 	r_letter = 0;
-	i = 0;
+	i = 1;
 	if (*path == 0)
 	{
 		*cmd = malloc(sizeof(char *) * 2);
@@ -112,20 +101,27 @@ int	alloc_exec_paths(char *path, char ***cmd)
 	arg = ft_strchr(aux, '\'');
 	if (arg)
 	{
-		i++;
 		while (arg[i] != '\'' && arg[i])
 		{
 			if (arg[i] == ' ')
 				r_letter = replace_space(&arg[i], aux);
 			i++;
-			// len++;
 		}
-		// space = ft_strnstr(aux, "' '", len);
-		// while (space)
-		// {
-		// 	r_letter = replace_space(space);
-		// 	space = ft_strnstr((space + 3), "' '", len);
-		// }
+		if (arg[i])
+		{
+			i++;
+			if (arg[i])
+			{
+				i++;
+				i++;
+				while (arg[i] != '\'' && arg[i])
+				{
+					if (arg[i] == ' ')
+						r_letter = replace_space(&arg[i], aux);
+					i++;
+				}
+			}
+		}
 	}
 	*cmd = ft_split(aux, ' ');
 	if (arg)
