@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/04 16:46:11 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/04 19:16:49 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	fork_cmd1(t_args *args)
 	if (verify_command(args->cmd1, args, &args->proc.pid_in))
 	{
 		close(args->file_fd);
-		return(127);
+		return (127);
 	}
 	args->proc.pid_in = fork();
 	if (args->proc.pid_in < 0)
@@ -43,7 +43,7 @@ int	fork_cmd2(t_args *args)
 	}
 	alloc_exec_paths(args->argv[3], &args->cmd2);
 	if (verify_command(args->cmd2, args, &args->proc.pid_out))
-		return(127);
+		return (127);
 	args->proc.pid_out = fork();
 	if (args->proc.pid_out < 0)
 		return (1);
@@ -98,9 +98,6 @@ int	main(int argc, char *argv[], char *envp[])
 	}
 	args.argv = argv;
 	args.envp = envp;
-	// args.path = find_path(envp);
-	// ft_printf("%s\n", args.path);
 	handle_processes(&args);
-	// free(args.path);
 	return (args.proc.ret);
 }
