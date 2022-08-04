@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:37:46 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/02 15:06:56 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/04 15:25:25 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_args
 	char	**cmd1;
 	char	**cmd2;
 	char	**envp;
+	char	*path;
 	int		file_fd;
 	t_proc	proc;
 }	t_args;
@@ -44,5 +45,7 @@ void	free_array(char **array);
 int		wait_and_free(pid_t pid, char **cmd, int *status, int *ret);
 int		verify_access(char *path, int mode);
 int		alloc_exec_paths(char *path, char ***cmd);
+char	*find_path(char **envp);
+int		verify_command(char **cmd, t_args *args, int *pid);
 
 #endif

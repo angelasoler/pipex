@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:14:54 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/03 20:21:47 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/04 16:46:11 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,10 @@ int	fork_cmd1(t_args *args)
 	}
 	args->file_fd = open(args->argv[1], O_RDONLY);
 	alloc_exec_paths(args->argv[2], &args->cmd1);
-	if (!verify_access(args->cmd1[0], F_OK))
+	if (verify_command(args->cmd1, args, &args->proc.pid_in))
 	{
-		args->proc.pid_in = -1;
 		close(args->file_fd);
-		if (args->cmd1[0][0] != '\0')
-			free_array(args->cmd1);
-		else
-		{
-			free(args->cmd1[0]);
-			free(args->cmd1);
-		}
-		args->proc.ret = 127;
-		return (127);
+		return(127);
 	}
 	args->proc.pid_in = fork();
 	if (args->proc.pid_in < 0)
@@ -51,19 +42,8 @@ int	fork_cmd2(t_args *args)
 		return (1);
 	}
 	alloc_exec_paths(args->argv[3], &args->cmd2);
-	if (!verify_access(args->cmd2[0], F_OK))
-	{
-		args->proc.pid_out = -1;
-		if (args->cmd2[0][0])
-			free_array(args->cmd2);
-		else
-		{
-			free(args->cmd2[0]);
-			free(args->cmd2);
-		}
-		args->proc.ret = 127;
-		return (127);
-	}
+	if (verify_command(args->cmd2, args, &args->proc.pid_out))
+		return(127);
 	args->proc.pid_out = fork();
 	if (args->proc.pid_out < 0)
 		return (1);
@@ -118,6 +98,9 @@ int	main(int argc, char *argv[], char *envp[])
 	}
 	args.argv = argv;
 	args.envp = envp;
+	// args.path = find_path(envp);
+	// ft_printf("%s\n", args.path);
 	handle_processes(&args);
+	// free(args.path);
 	return (args.proc.ret);
 }
