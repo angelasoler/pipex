@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 21:37:46 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/04 15:25:25 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/05 19:41:44 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,14 @@
 # include <string.h>
 # include <errno.h>
 # define PIPEX_H
+
+typedef struct s_path
+{
+	char	*path;
+	char	**tr_path;
+	char	*aux;
+	int		i;
+}	t_path;
 
 typedef struct s_proc
 {
@@ -47,5 +55,6 @@ int		verify_access(char *path, int mode);
 int		alloc_exec_paths(char *path, char ***cmd);
 char	*find_path(char **envp);
 int		verify_command(char **cmd, t_args *args, int *pid);
+void	free_crowd(char **vector, char *s);
 
 #endif

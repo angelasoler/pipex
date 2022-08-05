@@ -8,7 +8,8 @@ LIBFT = libft.a
 
 SRC =	pipex.c \
 		pipex_utils.c \
-		pipex_parsing.c
+		pipex_parsing.c \
+		pipex_access_utils.c
 
 OBJ = $(SRC:.c=.o)
 
