@@ -6,7 +6,7 @@
 /*   By: asoler <asoler@student.42sp.org.br>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 16:08:56 by asoler            #+#    #+#             */
-/*   Updated: 2022/08/05 20:02:58 by asoler           ###   ########.fr       */
+/*   Updated: 2022/08/07 18:54:35 by asoler           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	verify_access(char *path, int mode)
 {
 	if (access(path, mode) < 0)
 	{
-		if (mode == R_OK)
+		if (mode == R_OK || mode == W_OK)
 			ft_printf("bash: %s: %s\n", path, strerror(errno));
 		return (0);
 	}
