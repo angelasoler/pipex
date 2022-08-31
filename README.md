@@ -8,7 +8,7 @@
 </h1>
 
 <p align="center">
-     ~~~~~~~  Recreate the strucuture of this command in a c program   ~~~~~~
+     ~~~~~~~  Recreate the structure of this command line in a c program   ~~~~~~
 </p>
 
 
